@@ -230,7 +230,6 @@ RedisUtils.unlock("lock:create_order");
 }
 }
 ```
-#### 锁值为 UUID，确保线程安全
 ### 释放锁
 ```RedisUtils.unlock("lock:create_order");```
 
