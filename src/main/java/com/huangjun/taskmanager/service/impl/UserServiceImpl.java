@@ -37,8 +37,7 @@ public class UserServiceImpl implements UserService {
                 return Result.fail(ResultConstants.REGISTRY_ERROR);
             }
 //            RedisUtils.set(RedisConstants.USER_LOGIN + uuid,user,TimeConstants.SEVEN_MINUTE);
-        }
-        if (user.getPassword().equals(user.getUsername())) {
+        }else if ( user.getPassword().equals(user1.getPassword())) {
             return Result.fail(ResultConstants.REGISTRY_BEFORE);
         }
         return Result.ok(ResultConstants.REGISTRY_SUCCESS);
