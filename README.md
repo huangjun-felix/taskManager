@@ -231,7 +231,6 @@ RedisUtils.unlock("lock:create_order");
 }
 ```
 #### 锁值为 UUID，确保线程安全
-#### 自动续期由业务控制（建议配合 expireTime）
 ### 释放锁
 ```RedisUtils.unlock("lock:create_order");```
 
