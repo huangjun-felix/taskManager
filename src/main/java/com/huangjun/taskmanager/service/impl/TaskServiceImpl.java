@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.huangjun.taskmanager.constants.RedisConstants;
 import com.huangjun.taskmanager.constants.ResultConstants;
+import com.huangjun.taskmanager.constants.TimeConstants;
 import com.huangjun.taskmanager.entity.Result;
 import com.huangjun.taskmanager.entity.Task;
 import com.huangjun.taskmanager.mapper.TaskMapper;
@@ -72,6 +73,8 @@ public class TaskServiceImpl implements TaskService {
         }
         Task task2 = taskMapper.selectById(id);
         if (task2 == null){
+            Task task1 = new Task();
+            RedisUtils.setHash(RedisConstants.TASK+ ThreadLocalUtils.getUser().getId(),id,task1, TimeConstants.TWO_MINUTE);
             return Result.fail(ResultConstants.TASK_NOT_INFO);
         }
         RedisUtils.setHash(RedisConstants.TASK+ ThreadLocalUtils.getUser().getId(),id,task2);
