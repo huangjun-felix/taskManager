@@ -220,7 +220,8 @@ authorization:token
 ## 4. 分布式锁（基于 Redis + Lua）
 
 ### 尝试加锁
-```boolean locked = RedisUtils.tryLock("lock:create_order", 10000L); // 10秒自动释放
+```
+boolean locked = RedisUtils.tryLock("lock:create_order", 10000L); // 10秒自动释放
 if (locked) {
 try {
 // 执行业务逻辑
