@@ -183,3 +183,57 @@ authorization:token
     ]
 }
         ```
+# redis使用说明
+## 1. 基础配置要求
+   Redis 服务已启动（默认端口 6379）
+   Spring Boot 已正确配置 RedisTemplate
+
+
+## 2. String 类型操作
+
+### 存储（带过期时间）
+```RedisUtils.set("user:1001", user, 30000L);``` // 30秒过期（毫秒）
+### 存储（永不过期）
+```RedisUtils.set("config:app", config);```
+### 获取字符串值
+```String json = RedisUtils.get("user:1001");```
+### 获取并反序列化为对象
+```User user = RedisUtils.get("user:1001", User.class);```
+### 删除 key
+```RedisUtils.delete("user:1001");```
+### 单独设置过期时间
+```RedisUtils.expire("user:1001", 60000L); // 60秒```
+
+## 3. Hash 类型操作
+
+### 存储单个 field（无过期）
+```RedisUtils.setHash("TASK:1001", "task_001", task);```
+### 存储单个 field（带过期）
+```RedisUtils.setHash("TASK:1001", "task_001", task, 300000L); // 5分钟```
+### 获取指定 field 的值（反序列化）
+```Task task = RedisUtils.getFieldHashValue("TASK:1001", "task_001", Task.class);```
+### 获取所有 field 的值（返回 List）
+```List<Task> tasks = RedisUtils.getHashAllValue("TASK:1001", Task.class);```
+### 删除指定 field
+```RedisUtils.deleteHashField("TASK:1001", "task_001");```
+
+## 4. 分布式锁（基于 Redis + Lua）
+
+### 尝试加锁
+```boolean locked = RedisUtils.tryLock("lock:create_order", 10000L); // 10秒自动释放
+if (locked) {
+try {
+// 执行业务逻辑
+} finally {
+RedisUtils.unlock("lock:create_order");
+}
+}
+```
+#### 锁值为 UUID，确保线程安全
+#### 自动续期由业务控制（建议配合 expireTime）
+### 释放锁
+```RedisUtils.unlock("lock:create_order");```
+
+## 5. 自增 ID 生成
+
+```long taskId = RedisUtils.nextId("task");```
